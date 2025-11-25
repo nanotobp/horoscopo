@@ -211,21 +211,7 @@
 </section>
 
 
-              <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90"></div>
-              <div class="absolute bottom-0 left-0 p-4 sm:p-6 w-full">
-                <div class="flex items-end justify-between gap-3">
-                  <div>
-                    <div class="bg-pink-500/80 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded mb-2 inline-block uppercase">
-                      Vibe Check
-                    </div>
-                    <p id="vibeLabel" class="text-white font-black text-xl sm:text-2xl leading-none uppercase italic">
-                      <!-- label -->
-                    </p>
-                  </div>
-                  <span class="text-yellow-400 text-2xl drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]">👑</span>
-                </div>
-              </div>
-            </section>
+            
 
             <!-- FRASE DE ANIME -->
             <section class="bg-[#0b1121] border border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-xl hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden">
@@ -351,13 +337,32 @@
     ];
 
     const VIBE_IMAGES = [
-      { img: "https://images.unsplash.com/photo-1541562232579-512a21360020?auto=format&fit=crop&q=80&w=400", label: "Energía Imparable" },
-      { img: "https://images.unsplash.com/photo-1563823297-a7ebf9706692?auto=format&fit=crop&q=80&w=400", label: "Modo Soft & Chill" },
-      { img: "https://images.unsplash.com/photo-1601850494422-3cf395067171?auto=format&fit=crop&q=80&w=400", label: "Héroe en Entrenamiento" },
-      { img: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&q=80&w=400", label: "Misterio Oscuro" },
-      { img: "https://images.unsplash.com/photo-1620336655055-088d06e36bf0?auto=format&fit=crop&q=80&w=400", label: "Cool & Calculador" },
-      { img: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=400", label: "Aventura Total" },
-    ];
+  {
+    img: "https://images.pexels.com/photos/2113566/pexels-photo-2113566.jpeg?auto=compress&cs=tinysrgb&w=600",
+    label: "Energía Imparable",
+  },
+  {
+    img: "https://images.pexels.com/photos/7135037/pexels-photo-7135037.jpeg?auto=compress&cs=tinysrgb&w=600",
+    label: "Modo Soft & Chill",
+  },
+  {
+    img: "https://images.pexels.com/photos/6005329/pexels-photo-6005329.jpeg?auto=compress&cs=tinysrgb&w=600",
+    label: "Héroe en Entrenamiento",
+  },
+  {
+    img: "https://images.pexels.com/photos/3041271/pexels-photo-3041271.jpeg?auto=compress&cs=tinysrgb&w=600",
+    label: "Misterio Oscuro",
+  },
+  {
+    img: "https://images.pexels.com/photos/403571/pexels-photo-403571.jpeg?auto=compress&cs=tinysrgb&w=600",
+    label: "Cool & Calculador",
+  },
+  {
+    img: "https://images.pexels.com/photos/3660139/pexels-photo-3660139.jpeg?auto=compress&cs=tinysrgb&w=600",
+    label: "Aventura Total",
+  },
+];
+
 
     // seed por fecha+signo tipo djb2
     function getDailySeed(signId) {
