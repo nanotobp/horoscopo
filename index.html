@@ -120,7 +120,7 @@
               ENCENDIENDO COSMOS...
             </h2>
             <p class="text-purple-300 text-sm animate-pulse">
-              Consultando el mapa estelar 
+              Consultando el mapa estelar
             </p>
           </div>
         </div>
@@ -175,7 +175,8 @@
                   <h3 class="text-purple-400 font-bold uppercase text-[10px] sm:text-xs tracking-[0.2em] mb-3">
                     MENSAJE DEL ORÁCULO
                   </h3>
-                  <p id="textoReflexion" class="text-[1.2rem] font-bold text-white leading-relaxed">
+                 <p id="textoReflexion" class="text-[1.2rem] font-bold text-white leading-relaxed">
+
                     <!-- reflexión -->
                   </p>
                 </div>
@@ -183,8 +184,32 @@
             </section>
 
             <!-- VIBE CHECK -->
-            <section class="relative h-64 md:h-full rounded-3xl overflow-hidden group shadow-2xl border border-white/10">
-             <div id="vibeIcon" class="text-6xl">⚡</div>
+          <section class="relative min-h-64 h-auto rounded-3xl overflow-hidden group shadow-2xl border border-white/10">
+
+  
+  <!-- IMG REAL QUE ESTABA FALTANDO -->
+  <img id="vibeImg"
+       src=""
+       alt="Vibe del día"
+       class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500" />
+
+  <!-- Gradiente encima -->
+  <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90"></div>
+
+  <!-- CONTENIDO -->
+  <div class="absolute bottom-0 left-0 p-4 sm:p-6 w-full">
+    <div class="flex items-end justify-between gap-3">
+      <div>
+        <div class="bg-pink-500/80 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded mb-2 inline-block uppercase">
+          Vibe Check
+        </div>
+        <p id="vibeLabel" class="text-white font-black text-xl sm:text-2xl leading-none uppercase italic"></p>
+      </div>
+      <span class="text-yellow-400 text-2xl drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]">👑</span>
+    </div>
+  </div>
+</section>
+
 
               <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90"></div>
               <div class="absolute bottom-0 left-0 p-4 sm:p-6 w-full">
@@ -503,17 +528,6 @@
       } else {
         vibeLabel.textContent = 'Vibra Desconocida';
       }
-      // Ícono del vibe (⚡🔥❄️…)
-const vibeIcons = {
-  "Energía Imparable": "⚡",
-  "Modo Soft & Chill": "🌙",
-  "Héroe en Entrenamiento": "🔥",
-  "Misterio Oscuro": "🜁",
-  "Cool & Calculador": "❄️",
-  "Aventura Total": "🎒"
-};
-
-vibeIcon.textContent = vibeIcons[data.vibe.label] || "✨";
 
       // frase anime
       const personaje = data.personaje || 'Personaje desconocido';
@@ -549,6 +563,8 @@ vibeIcon.textContent = vibeIcons[data.vibe.label] || "✨";
 
       readingLoading.classList.add('hidden');
       readingContent.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
     }
 
     async function selectSign(sign) {
@@ -580,15 +596,6 @@ vibeIcon.textContent = vibeIcons[data.vibe.label] || "✨";
           recomendacion: { ...fb.recomendacion, ...(data.recomendacion || {}) },
           vibe: { ...fb.vibe, ...(data.vibe || {}) }
         };
-        const vibeIcons = {
-  "Energía Imparable": "⚡",
-  "Modo Soft & Chill": "🌙",
-  "Héroe en Entrenamiento": "🔥",
-  "Misterio Oscuro": "🜁",
-  "Cool & Calculador": "❄️",
-  "Aventura Total": "🎒"
-};
-
 
         fillReadingView(sign, merged);
       } catch (err) {
