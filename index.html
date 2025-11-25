@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Horóscopo Otaku – Avatar Astral</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* animaciones extra tipo tailwind-animate */
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .animate-spin-slow {
+      animation: spin-slow 3s linear infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#050b14] text-white font-sans selection:bg-pink-500 selection:text-white">
+
+  <!-- Background blobs y textura -->
+  <div class="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
+    <div class="absolute -top-[20%] -left-[20%] w-[50%] h-[50%] bg-purple-900 rounded-full blur-[150px] opacity-20 animate-pulse"></div>
+    <div class="absolute -bottom-[20%] -right-[20%] w-[50%] h-[50%] bg-indigo-900 rounded-full blur-[150px] opacity-20"></div>
+    <div class="absolute inset-0 opacity-10" style="background-image:url('https://www.transparenttextures.com/patterns/carbon-fibre.png')"></div>
+  </div>
+
+  <div class="relative z-10">
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 w-full z-50 bg-gray-900/80 backdrop-blur-lg border-b border-white/10">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="flex items-center justify-between h-16">
+          <button
+            type="button"
+            id="btnHomeNavbar"
+            class="flex items-center cursor-pointer hover:scale-105 transition-transform group"
+            aria-label="Volver al inicio"
+          >
+            <div class="bg-gradient-to-tr from-purple-600 to-pink-500 p-2 rounded-xl mr-3 rotate-6 group-hover:rotate-12 transition-all shadow-[0_0_15px_rgba(236,72,153,0.6)]">
+              <!-- reemplazo de Gamepad2 -->
+              <span class="block text-xl">🎮</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-black text-xl tracking-tighter text-white italic drop-shadow-md leading-none">
+                HORÓSCOPO
+              </span>
+              <span class="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 tracking-widest">
+                OTAKU
+              </span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HOME VIEW -->
+    <main class="pt-24 pb-12 w-full">
+      <section id="homeView" class="max-w-7xl mx-auto px-4">
+        <header class="text-center mb-16 mt-8 relative">
+          <div class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-full h-32 bg-purple-500 blur-[100px] opacity-10 -z-10"></div>
+          <span class="inline-block py-1 px-4 rounded-full bg-purple-500/10 text-purple-300 text-[10px] font-black mb-6 border border-purple-500/20 uppercase tracking-[0.3em] shadow-[0_0_10px_rgba(168,85,247,0.2)]">
+            Edición Diaria 
+          </span>
+          <h1 class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 drop-shadow-2xl tracking-tighter leading-tight">
+            ELEGÍ TU <br />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
+              AVATAR ASTRAL
+            </span>
+          </h1>
+          <p class="text-base sm:text-lg text-slate-400 max-w-xl mx-auto leading-relaxed font-medium">
+            El oráculo definitivo para fans del anime. Descubrí qué arco argumental están escribiendo las estrellas para vos hoy.
+          </p>
+        </header>
+
+        <!-- GRID DE SIGNOS -->
+        <section
+          id="signGrid"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-2 sm:px-0"
+          aria-label="Selecciona tu signo zodiacal"
+        >
+          <!-- se rellena desde JS -->
+        </section>
+
+        <footer class="mt-24 text-center border-t border-white/5 pt-8">
+          <p class="text-slate-600 text-[10px] sm:text-xs font-mono uppercase tracking-widest">
+            AnimeStars Oracle • Otaku Mode Activated
+          </p>
+        </footer>
+      </section>
+
+      <!-- READING VIEW -->
+      <section id="readingView" class="max-w-5xl mx-auto px-4 pb-20 hidden">
+        <!-- BOTÓN VOLVER -->
+        <button
+          type="button"
+          id="btnBack"
+          class="flex items-center text-white/70 hover:text-white mb-8 transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded-full"
+        >
+          <div class="bg-white/10 p-2 rounded-full mr-3 group-hover:bg-purple-600 transition-colors">
+            <span class="block text-sm">←</span>
+          </div>
+          <span class="font-bold tracking-wide text-sm uppercase">
+            Seleccionar otro signo
+          </span>
+        </button>
+
+        <!-- LOADER -->
+        <div id="readingLoading" class="min-h-[70vh] flex flex-col items-center justify-center text-white space-y-8">
+          <div class="relative w-28 h-28">
+            <div class="absolute inset-0 rounded-full border-4 border-t-transparent border-l-transparent border-r-purple-500 border-b-purple-500 animate-spin"></div>
+            <div class="absolute inset-2 rounded-full border-4 border-t-pink-500 border-l-pink-500 border-r-transparent border-b-transparent animate-spin-slow"></div>
+            <div id="loaderSymbol" class="absolute inset-0 flex items-center justify-center text-4xl animate-pulse text-purple-200">
+              ★
+            </div>
+          </div>
+          <div class="text-center space-y-2">
+            <h2 class="text-2xl font-bold italic tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
+              ENCENDIENDO COSMOS...
+            </h2>
+            <p class="text-purple-300 text-sm animate-pulse">
+              Consultando el mapa estelar con IA
+            </p>
+          </div>
+        </div>
+
+        <!-- CONTENIDO -->
+        <div id="readingContent" class="hidden">
+          <!-- HEADER SIGNO + NUMERO SUERTE -->
+          <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-12 gap-6">
+            <div class="w-full">
+              <div class="flex flex-wrap items-center gap-3 mb-3">
+                <span
+                  id="badgeElemento"
+                  class="px-4 py-1.5 rounded-lg text-white text-xs font-bold uppercase tracking-widest shadow-lg shadow-purple-500/20 bg-gradient-to-r from-purple-600 to-pink-600"
+                >
+                  Elemento
+                </span>
+                <span class="text-purple-300 font-mono text-xs uppercase" id="fechaHoy">
+                  <!-- fecha -->
+                </span>
+              </div>
+              <h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] flex items-center gap-4">
+                <span id="tituloSigno">Signo</span>
+                <span id="simboloSigno" class="text-4xl md:text-5xl text-white/20">☆</span>
+              </h1>
+            </div>
+
+            <div class="bg-gray-900/60 backdrop-blur-xl px-6 py-4 rounded-2xl border border-white/10 flex items-center gap-4 shadow-2xl shadow-purple-900/20 w-full md:w-auto">
+              <div class="bg-yellow-400 p-3 rounded-xl shadow-[0_0_20px_rgba(250,204,21,0.5)] animate-pulse">
+                <span class="text-black text-xl">⚡</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-xs text-purple-300 uppercase font-bold tracking-wider">
+                  Número de la Suerte
+                </span>
+                <span id="numeroSuerte" class="text-3xl md:text-4xl font-black text-white italic">
+                  #00
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- GRID BENTO -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            <!-- MENSAJE DEL ORACULO -->
+            <section class="md:col-span-2 bg-gradient-to-br from-gray-900 to-gray-800 border border-white/10 rounded-3xl p-6 sm:p-8 relative overflow-hidden group hover:border-purple-500/50 transition-colors duration-300 shadow-xl">
+              <div class="absolute top-0 right-0 w-80 h-80 bg-purple-600 rounded-full blur-[120px] opacity-10 -z-10 group-hover:opacity-20 transition-opacity"></div>
+              <div class="flex items-start gap-4 sm:gap-5 relative z-10">
+                <div class="p-3 bg-purple-500/20 rounded-2xl text-purple-300 border border-purple-500/30">
+                  <span class="text-2xl">✨</span>
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-purple-400 font-bold uppercase text-[10px] sm:text-xs tracking-[0.2em] mb-3">
+                    MENSAJE DEL ORÁCULO
+                  </h3>
+                  <p id="textoReflexion" class="text-xl sm:text-2xl md:text-3xl font-bold text-white leading-relaxed">
+                    <!-- reflexión -->
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <!-- VIBE CHECK -->
+            <section class="relative h-64 md:h-full rounded-3xl overflow-hidden group shadow-2xl border border-white/10">
+              <img
+                id="vibeImg"
+                src="https://images.unsplash.com/photo-1541562232579-512a21360020?auto=format&fit=crop&q=80&w=400"
+                alt="Vibra del día"
+                loading="lazy"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90"></div>
+              <div class="absolute bottom-0 left-0 p-4 sm:p-6 w-full">
+                <div class="flex items-end justify-between gap-3">
+                  <div>
+                    <div class="bg-pink-500/80 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded mb-2 inline-block uppercase">
+                      Vibe Check
+                    </div>
+                    <p id="vibeLabel" class="text-white font-black text-xl sm:text-2xl leading-none uppercase italic">
+                      <!-- label -->
+                    </p>
+                  </div>
+                  <span class="text-yellow-400 text-2xl drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]">👑</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- FRASE DE ANIME -->
+            <section class="bg-[#0b1121] border border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-xl hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden">
+              <div class="absolute -right-4 -top-4 text-white/5 rotate-12 text-7xl">
+                “
+              </div>
+              <blockquote id="fraseAnime" class="text-lg sm:text-xl text-gray-200 italic font-medium relative z-10">
+                <!-- frase -->
+              </blockquote>
+              <div class="mt-6 sm:mt-8 border-t border-white/10 pt-4 relative z-10">
+                <p id="autorAnime" class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 font-black uppercase text-xs sm:text-sm tracking-wide mb-1">
+                  <!-- autor -->
+                </p>
+                <p class="text-gray-500 text-[11px] sm:text-xs font-mono uppercase">
+                  Anime: <span id="nombreAnime" class="text-gray-300 font-bold"></span>
+                </p>
+              </div>
+            </section>
+
+            <!-- RECOMENDACIÓN -->
+            <section class="md:col-span-2 bg-[#0f172a] rounded-3xl overflow-hidden flex flex-col md:flex-row border border-white/10 hover:border-white/30 transition-colors shadow-2xl relative">
+              <div class="absolute inset-0 bg-gradient-to-r from-purple-900/10 to-transparent pointer-events-none"></div>
+
+              <div class="w-full md:w-1/3 bg-gray-800/50 flex flex-col items-center justify-center p-6 sm:p-8 border-b md:border-b-0 md:border-r border-white/5 relative overflow-hidden group">
+                <div id="recomGradient" class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 opacity-10 group-hover:opacity-20 transition-opacity"></div>
+                <div id="recomIcon" class="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center text-4xl">
+                  📺
+                </div>
+                <span id="recomMediaType" class="mt-4 text-[10px] sm:text-xs font-black uppercase tracking-widest text-white/60 bg-black/20 px-3 py-1 rounded-full">
+                  anime
+                </span>
+              </div>
+
+              <div class="p-6 sm:p-8 flex flex-col justify-center md:w-2/3 relative">
+                <div class="absolute top-4 right-4 sm:top-6 sm:right-6 text-white/10 text-5xl rotate-12" id="recomWatermark">
+                  ▶
+                </div>
+
+                <div class="flex items-center gap-1 mb-2" aria-hidden="true">
+                  <span class="text-yellow-500 text-lg">★</span>
+                  <span class="text-yellow-500 text-lg">★</span>
+                  <span class="text-yellow-500 text-lg">★</span>
+                  <span class="text-yellow-500 text-lg">★</span>
+                  <span class="text-yellow-500 text-lg">★</span>
+                </div>
+
+                <h3 id="recomTitulo" class="text-2xl sm:text-3xl font-black text-white mb-2 italic uppercase tracking-tight">
+                  Título
+                </h3>
+
+                <span id="recomTipo" class="text-purple-400 font-bold text-[11px] sm:text-xs uppercase tracking-wider mb-4 block">
+                  Tipo
+                </span>
+
+                <p id="recomDesc" class="text-gray-400 text-sm leading-relaxed border-l-2 border-purple-500 pl-4">
+                  Descripción
+                </p>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // =======================
+    // CONFIG: URL de tu API IA
+    // =======================
+    const API_URL = "https://horoscopo-otaku.nanotobp.workers.dev";
+ // 
+
+    // =======================
+    // DATA BASE (fallback)
+    // =======================
+    const ZODIAC_SIGNS = [
+      { id: 'aries', name: 'Aries', date: 'Mar 21 - Abr 19', symbol: '♈', element: 'Fuego', image: 'https://images.unsplash.com/photo-1534234828563-02511c964500?q=80&w=400&auto=format&fit=crop', color: 'from-red-600 to-orange-600' },
+      { id: 'taurus', name: 'Tauro', date: 'Abr 20 - May 20', symbol: '♉', element: 'Tierra', image: 'https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?q=80&w=400&auto=format&fit=crop', color: 'from-emerald-600 to-green-700' },
+      { id: 'gemini', name: 'Géminis', date: 'May 21 - Jun 20', symbol: '♊', element: 'Aire', image: 'https://images.unsplash.com/photo-1464802686167-b939a6910659?q=80&w=400&auto=format&fit=crop', color: 'from-yellow-500 to-amber-500' },
+      { id: 'cancer', name: 'Cáncer', date: 'Jun 21 - Jul 22', symbol: '♋', element: 'Agua', image: 'https://images.unsplash.com/photo-1506318137071-8bcbf6b925d?q=80&w=400&auto=format&fit=crop', color: 'from-blue-500 to-cyan-600' },
+      { id: 'leo', name: 'Leo', date: 'Jul 23 - Ago 22', symbol: '♌', element: 'Fuego', image: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=400&auto=format&fit=crop', color: 'from-orange-600 to-red-600' },
+      { id: 'virgo', name: 'Virgo', date: 'Ago 23 - Sep 22', symbol: '♍', element: 'Tierra', image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=400&auto=format&fit=crop', color: 'from-emerald-500 to-teal-600' },
+      { id: 'libra', name: 'Libra', date: 'Sep 23 - Oct 22', symbol: '♎', element: 'Aire', image: 'https://images.unsplash.com/photo-1533292686609-dd77785bf1a6?q=80&w=400&auto=format&fit=crop', color: 'from-pink-500 to-rose-500' },
+      { id: 'scorpio', name: 'Escorpio', date: 'Oct 23 - Nov 21', symbol: '♏', element: 'Agua', image: 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?q=80&w=400&auto=format&fit=crop', color: 'from-purple-600 to-indigo-700' },
+      { id: 'sagittarius', name: 'Sagitario', date: 'Nov 22 - Dic 21', symbol: '♐', element: 'Fuego', image: 'https://images.unsplash.com/photo-1543722530-d2c3201371e7?q=80&w=400&auto=format&fit=crop', color: 'from-violet-600 to-fuchsia-600' },
+      { id: 'capricorn', name: 'Capricornio', date: 'Dic 22 - Ene 19', symbol: '♑', element: 'Tierra', image: 'https://images.unsplash.com/photo-1484589065579-248aad0d8b13?q=80&w=400&auto=format&fit=crop', color: 'from-stone-500 to-neutral-700' },
+      { id: 'aquarius', name: 'Acuario', date: 'Ene 20 - Feb 18', symbol: '♒', element: 'Aire', image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=400&auto=format&fit=crop', color: 'from-cyan-500 to-sky-600' },
+      { id: 'pisces', name: 'Piscis', date: 'Feb 19 - Mar 20', symbol: '♓', element: 'Agua', image: 'https://images.unsplash.com/photo-1518531933037-9a847e0d3886?q=80&w=400&auto=format&fit=crop', color: 'from-indigo-500 to-blue-600' },
+    ];
+
+    const TEEN_REFLECTIONS = [
+      "No sos un NPC en la vida de nadie. Hoy tomá el control del joystick y decidí vos la próxima misión principal.",
+      "Ese 'evento canónico' doloroso por el que estás pasando es solo desarrollo de personaje. El power-up viene después.",
+      "A veces el verdadero villano es tu propia duda. Activá tu Bankai interior y cortá esos pensamientos negativos.",
+      "Tu 'squad' no necesita ser perfecto, solo leal. Valorá a quien se queda con vos incluso en los arcos de relleno.",
+      "No necesitás filtro para brillar. Tu energía real (Haki) atrae más que cualquier estética falsa.",
+      "Si sentís que no encajás, recordá que los protagonistas siempre son los 'raros' al principio de la serie.",
+      "El 'crush' no te define. Enfocate en subir tus propias estadísticas de carisma e inteligencia primero.",
+      "Hoy tenés energía de protagonista shonen: terco, ruidoso y capaz de lo imposible. Usalo para bien.",
+      "La ansiedad es como un Genjutsu. Respirar hondo, romper la ilusión y recordar quién sos en realidad es la clave.",
+      "No te compares con el capítulo 100 de otra persona cuando vos vas por el capítulo 10. Tu ritmo es el correcto.",
+    ];
+
+    const ANIME_QUOTES = [
+      { quote: "Si tenés tiempo para fantasear con un final hermoso, ¿por qué no vivir bellamente hasta el final?", author: "Gintoki Sakata", anime: "Gintama" },
+      { quote: "El talento es algo que hacés florecer, el instinto es algo que pulís.", author: "Tooru Oikawa", anime: "Haikyuu!!" },
+      { quote: "¡No te rindas! No hay vergüenza en caer. La verdadera vergüenza es no volver a levantarse.", author: "Shintaro Midorima", anime: "Kuroko no Basket" },
+      { quote: "Los débiles no pueden elegir cómo mueren. ¡Hacete fuerte!", author: "Trafalgar Law", anime: "One Piece" },
+      { quote: "A veces, las cosas más insignificantes pueden convertirse en recuerdos invaluables.", author: "Tohru Honda", anime: "Fruits Basket" },
+      { quote: "El miedo no es malo. Te dice cuáles son tus debilidades. Y una vez que las conocés, podés volverte más fuerte.", author: "Gildarts", anime: "Fairy Tail" },
+      { quote: "No importa cuán difícil sea el desafío, el coraje es la magia que convierte los sueños en realidad.", author: "Emilia", anime: "Re:Zero" },
+    ];
+
+    const RECOMMENDATIONS = [
+      { title: "Blue Lock", mediaType: "anime", type: "Anime Deportivo", desc: "Para despertar tu ego y ambición. Si hoy te sentís competitivo, este es tu show." },
+      { title: "Spy x Family", mediaType: "anime", type: "Anime Comedia", desc: "Cuando necesitás reír y sentir calorcito familiar. Perfecto para desconectar." },
+      { title: "Chainsaw Man", mediaType: "manga", type: "Manga Shonen", desc: "Caos puro para cuando te sentís rebelde y necesitás acción frenética." },
+      { title: "Nana", mediaType: "anime", type: "Anime Clásico", desc: "Drama y estilo punk para el corazón. Si hoy estás sentimental, dale play." },
+      { title: "Jujutsu Kaisen", mediaType: "anime", type: "Anime Acción", desc: "Exorcizá tus demonios internos hoy. Energía pura para levantar el ánimo." },
+      { title: "Oyasumi Punpun", mediaType: "manga", type: "Manga Seinen", desc: "Una lectura profunda y compleja para días de mucha reflexión existencial." },
+      { title: "Haikyuu!!", mediaType: "anime", type: "Anime Deportivo", desc: "Motivación pura para trabajar en equipo. Te va a hacer querer salir a conquistar el mundo." },
+      { title: "Berserk", mediaType: "manga", type: "Manga Seinen", desc: "Para cuando necesitás recordar que la resiliencia lo es todo ante la adversidad." },
+    ];
+
+    const VIBE_IMAGES = [
+      { img: "https://images.unsplash.com/photo-1541562232579-512a21360020?auto=format&fit=crop&q=80&w=400", label: "Energía Imparable" },
+      { img: "https://images.unsplash.com/photo-1563823297-a7ebf9706692?auto=format&fit=crop&q=80&w=400", label: "Modo Soft & Chill" },
+      { img: "https://images.unsplash.com/photo-1601850494422-3cf395067171?auto=format&fit=crop&q=80&w=400", label: "Héroe en Entrenamiento" },
+      { img: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&q=80&w=400", label: "Misterio Oscuro" },
+      { img: "https://images.unsplash.com/photo-1620336655055-088d06e36bf0?auto=format&fit=crop&q=80&w=400", label: "Cool & Calculador" },
+      { img: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=400", label: "Aventura Total" },
+    ];
+
+    // seed por fecha+signo tipo djb2
+    function getDailySeed(signId) {
+      const today = new Date();
+      const datePart = today.toISOString().slice(0, 10); // YYYY-MM-DD
+      const base = datePart + '-' + signId;
+      let hash = 5381;
+      for (let i = 0; i < base.length; i++) {
+        hash = ((hash << 5) + hash) + base.charCodeAt(i);
+      }
+      return Math.abs(hash);
+    }
+
+    function seededPick(seed, offset, arrayLength) {
+      return (seed + offset) % arrayLength;
+    }
+
+    function buildFallbackResult(sign) {
+      const seed = getDailySeed(sign.id);
+
+      const reflection = TEEN_REFLECTIONS[seededPick(seed, 1, TEEN_REFLECTIONS.length)];
+      const quote = ANIME_QUOTES[seededPick(seed, 0, ANIME_QUOTES.length)];
+      const luckyNumber = (seededPick(seed, 2, 99) + 1);
+      const recommendation = RECOMMENDATIONS[seededPick(seed, 3, RECOMMENDATIONS.length)];
+      const vibe = VIBE_IMAGES[seededPick(seed, 4, VIBE_IMAGES.length)];
+
+      return {
+        mensaje: reflection,
+        frase: quote.quote,
+        personaje: quote.author,
+        anime: quote.anime,
+        numero: luckyNumber,
+        recomendacion: {
+          titulo: recommendation.title,
+          tipo: recommendation.type,
+          mediaType: recommendation.mediaType,
+          descripcion: recommendation.desc,
+        },
+        vibe: {
+          img: vibe.img,
+          label: vibe.label,
+        },
+        color_aurico: "#a855f7",
+      };
+    }
+
+    // =======================
+    // DOM helpers
+    // =======================
+    const homeView = document.getElementById('homeView');
+    const readingView = document.getElementById('readingView');
+    const signGrid = document.getElementById('signGrid');
+    const btnBack = document.getElementById('btnBack');
+    const btnHomeNavbar = document.getElementById('btnHomeNavbar');
+    const readingLoading = document.getElementById('readingLoading');
+    const readingContent = document.getElementById('readingContent');
+    const loaderSymbol = document.getElementById('loaderSymbol');
+
+    const badgeElemento = document.getElementById('badgeElemento');
+    const fechaHoyEl = document.getElementById('fechaHoy');
+    const tituloSigno = document.getElementById('tituloSigno');
+    const simboloSigno = document.getElementById('simboloSigno');
+    const numeroSuerte = document.getElementById('numeroSuerte');
+
+    const textoReflexion = document.getElementById('textoReflexion');
+    const vibeImg = document.getElementById('vibeImg');
+    const vibeLabel = document.getElementById('vibeLabel');
+    const fraseAnime = document.getElementById('fraseAnime');
+    const autorAnime = document.getElementById('autorAnime');
+    const nombreAnime = document.getElementById('nombreAnime');
+
+    const recomGradient = document.getElementById('recomGradient');
+    const recomIcon = document.getElementById('recomIcon');
+    const recomMediaType = document.getElementById('recomMediaType');
+    const recomWatermark = document.getElementById('recomWatermark');
+    const recomTitulo = document.getElementById('recomTitulo');
+    const recomTipo = document.getElementById('recomTipo');
+    const recomDesc = document.getElementById('recomDesc');
+
+    let currentSign = null;
+
+    function renderSignGrid() {
+      signGrid.innerHTML = '';
+      ZODIAC_SIGNS.forEach(sign => {
+        // gradiente seguro similar a tu App.jsx
+        const safeGradient = sign.color
+          ? sign.color.replace('from-', 'from-black/40 via-black/20 to-')
+          : 'from-black/40 via-black/20 to-black';
+
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className =
+          'group relative h-64 w-full rounded-3xl overflow-hidden hover:scale-105 transition-all duration-500 ' +
+          'shadow-xl hover:shadow-purple-500/50 border-2 border-transparent hover:border-purple-400/50 ' +
+          'focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900';
+        card.setAttribute('aria-label', 'Ver lectura para ' + sign.name);
+
+        card.innerHTML = `
+          <div class="absolute inset-0 bg-gray-900">
+            <img src="${sign.image}" alt="Constelación y fondo cósmico para ${sign.name}"
+              loading="lazy"
+              class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" />
+            <div class="absolute inset-0 bg-black/40 mix-blend-multiply"></div>
+          </div>
+
+          <div class="absolute inset-0 bg-gradient-to-t ${safeGradient} opacity-90"></div>
+
+          <div class="absolute inset-0 flex flex-col justify-end p-6 z-10 text-left">
+            <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+              <span class="text-5xl font-bold text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] block mb-1 filter brightness-125">
+                ${sign.symbol}
+              </span>
+              <h3 class="text-2xl font-black text-white uppercase tracking-wider mb-1 drop-shadow-md">
+                ${sign.name}
+              </h3>
+              <p class="text-xs font-bold text-white/90 bg-white/10 backdrop-blur-md inline-block px-3 py-1 rounded-full border border-white/20">
+                ${sign.date}
+              </p>
+            </div>
+          </div>
+
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+        `;
+
+        card.addEventListener('click', () => selectSign(sign));
+        signGrid.appendChild(card);
+      });
+    }
+
+    function showHome() {
+      readingView.classList.add('hidden');
+      homeView.classList.remove('hidden');
+      currentSign = null;
+    }
+
+    function showReadingLoading(sign) {
+      currentSign = sign;
+      homeView.classList.add('hidden');
+      readingView.classList.remove('hidden');
+      readingLoading.classList.remove('hidden');
+      readingContent.classList.add('hidden');
+      loaderSymbol.textContent = sign.symbol;
+    }
+
+    function fillReadingView(sign, data) {
+      // fecha
+      const fecha = new Date().toLocaleDateString('es-ES', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long'
+      });
+      fechaHoyEl.textContent = fecha;
+
+      // signo
+      tituloSigno.textContent = sign.name;
+      simboloSigno.textContent = sign.symbol;
+      badgeElemento.textContent = 'Elemento ' + sign.element;
+
+      numeroSuerte.textContent = '#' + (data.numero || '00');
+      textoReflexion.textContent = data.mensaje || '';
+
+      // vibe
+      if (data.vibe && data.vibe.img) {
+        vibeImg.src = data.vibe.img;
+      }
+      if (data.vibe && data.vibe.label) {
+        vibeLabel.textContent = data.vibe.label;
+      } else {
+        vibeLabel.textContent = 'Vibra Desconocida';
+      }
+
+      // frase anime
+      const personaje = data.personaje || 'Personaje desconocido';
+      const anime = data.anime || 'Anime desconocido';
+      fraseAnime.textContent = data.frase ? '“' + data.frase + '”' : '';
+      autorAnime.textContent = personaje;
+      nombreAnime.textContent = anime;
+
+      // recomendación
+      const rec = data.recomendacion || {};
+      recomTitulo.textContent = rec.titulo || 'Recomendación misteriosa';
+      recomTipo.textContent = rec.tipo || '';
+      recomDesc.textContent = rec.descripcion || '';
+
+      const mediaType = (rec.mediaType || 'anime').toLowerCase();
+      recomMediaType.textContent = mediaType;
+      if (mediaType === 'anime') {
+        recomIcon.textContent = '📺';
+        recomWatermark.textContent = '▶';
+      } else {
+        recomIcon.textContent = '📚';
+        recomWatermark.textContent = '📖';
+      }
+
+      // gradient (si querés podrías mapear data.color_aurico)
+      const safeGradient = sign.color
+        ? sign.color.replace('from-', 'from-').replace('to-', 'to-')
+        : 'from-purple-600 to-pink-600';
+      recomGradient.className =
+        'absolute inset-0 bg-gradient-to-br ' +
+        safeGradient +
+        ' opacity-10 group-hover:opacity-20 transition-opacity';
+
+      readingLoading.classList.add('hidden');
+      readingContent.classList.remove('hidden');
+    }
+
+    async function selectSign(sign) {
+      showReadingLoading(sign);
+
+      const fallback = () => {
+        const fb = buildFallbackResult(sign);
+        fillReadingView(sign, fb);
+      };
+
+      if (!API_URL || API_URL.startsWith('https://tu-endpoint-de-ia.com')) {
+        // si no configuraste la API, usamos fallback
+        fallback();
+        return;
+      }
+
+      try {
+        const today = new Date().toISOString().slice(0, 10);
+        const url = API_URL + '?sign=' + encodeURIComponent(sign.id) + '&date=' + encodeURIComponent(today);
+        const res = await fetch(url, { method: 'GET' });
+        if (!res.ok) throw new Error('Respuesta no OK');
+        const data = await res.json();
+
+        // merge con fallback por si faltan campos
+        const fb = buildFallbackResult(sign);
+        const merged = {
+          ...fb,
+          ...data,
+          recomendacion: { ...fb.recomendacion, ...(data.recomendacion || {}) },
+          vibe: { ...fb.vibe, ...(data.vibe || {}) }
+        };
+
+        fillReadingView(sign, merged);
+      } catch (err) {
+        console.error('Error en API IA, usando fallback:', err);
+        fallback();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSignGrid();
+      btnBack.addEventListener('click', showHome);
+      btnHomeNavbar.addEventListener('click', showHome);
+    });
+  </script>
+</body>
+</html>
